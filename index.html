@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AccountingOS Pro | 2026 Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .page-content { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .sidebar-item { transition: all 0.3s ease; cursor: pointer; }
+        .sidebar-item:hover { background: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; color: #3b82f6; }
+        .active-link { background: rgba(59, 130, 246, 0.15); border-left: 4px solid #3b82f6; color: #3b82f6; }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-50 flex h-screen overflow-hidden text-slate-900">
+
+    <!-- SIDEBAR -->
+    <aside class="w-80 bg-slate-900 text-white flex flex-col shadow-2xl z-50">
+        <div class="p-8 border-b border-slate-800 text-center">
+            <h1 class="text-2xl font-bold flex items-center justify-center gap-2">
+                <span class="bg-blue-600 p-2 rounded-lg text-white shadow-lg shadow-blue-900/50">
+                    <i class="fas fa-balance-scale"></i>
+                </span>
+                AccounTech <span class="text-[10px] bg-slate-700 px-2 py-1 rounded">v.2026</span>
+            </h1>
+        </div>
+        
+        <nav class="flex-grow py-6 px-4 space-y-2">
+            <button onclick="showPage('payroll', this)" class="sidebar-item active-link w-full flex items-center gap-4 p-4 rounded-xl text-left font-semibold">
+                <i class="fas fa-calculator w-5"></i> Μισθοδοσία & Δώρα
+            </button>
+            <button onclick="showPage('benefits', this)" class="sidebar-item w-full flex items-center gap-4 p-4 rounded-xl text-left opacity-70 hover:opacity-100 font-semibold">
+                <i class="fas fa-hand-holding-dollar w-5"></i> ΔΥΠΑ / ΟΠΕΚΑ
+            </button>
+            <button onclick="showPage('espa', this)" class="sidebar-item w-full flex items-center gap-4 p-4 rounded-xl text-left opacity-70 hover:opacity-100 font-semibold">
+                <i class="fas fa-chart-line w-5"></i> Προγράμματα ΕΣΠΑ
+            </button>
+            <button onclick="showPage('laws', this)" class="sidebar-item w-full flex items-center gap-4 p-4 rounded-xl text-left opacity-70 hover:opacity-100 font-semibold">
+                <i class="fas fa-file-invoice w-5"></i> Εγκύκλιοι & ΦΕΚ
+            </button>
+        </nav>
+
+        <div class="p-6 border-t border-slate-800 text-[10px] text-slate-500 uppercase tracking-widest">
+            <p><i class="fas fa-shield-alt mr-2 text-blue-500"></i> Secure System 2026</p>
+            <p class="mt-2"><i class="fas fa-clock mr-2"></i> Update: 10/03/2026</p>
+        </div>
+    </aside>
+
+    <!-- MAIN DASHBOARD -->
+    <main class="flex-grow overflow-y-auto bg-slate-50 relative">
+        <div class="max-w-6xl mx-auto p-10">
+
+            <!-- PAGE: PAYROLL -->
+            <section id="payroll" class="page-content">
+                <header class="mb-10">
+                    <h2 class="text-4xl font-black text-slate-800 tracking-tight">Payroll Engine</h2>
+                    <p class="text-slate-500 mt-2 italic text-lg font-light">Υπολογισμός καθαρού μισθού, εισφορών ΕΦΚΑ και δώρων ιδιωτικού τομέα 2026.</p>
+                </header>
+
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-10">
+                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-2">Μεικτός Μηνιαίος Μισθός (€)</label>
+                                <input type="number" id="gross" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-100 outline-none transition text-xl font-bold" placeholder="π.χ. 1400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-2">Αριθμός Προστατευόμενων Τέκνων</label>
+                                <select id="kids" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none font-semibold">
+                                    <option value="0">Χωρίς Παιδιά (Αφορολόγητο 8.636€)</option>
+                                    <option value="1">1 Παιδί (Αφορολόγητο 9.000€)</option>
+                                    <option value="2">2 Παιδιά (Αφορολόγητο 10.000€)</option>
+                                    <option value="3">3 Παιδιά (Αφορολόγητο 11.000€)</option>
+                                </select>
+                            </div>
+                            <button onclick="calculatePayroll()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-5 rounded-2xl transition shadow-xl hover:shadow-blue-200 uppercase tracking-widest text-lg">
+                                Εκτέλεση Υπολογισμού
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="resCard" class="bg-slate-900 text-white p-10 rounded-3xl shadow-2xl transition-all duration-700 opacity-20 transform translate-y-4">
+                        <h3 class="text-xl font-bold mb-8 border-b border-slate-700 pb-4 flex justify-between items-center">
+                            Ανάλυση Μισθοδοσίας 2026 
+                            <span class="text-blue-500 text-2xl"><i class="fas fa-coins"></i></span>
+                        </h3>
+                        <div class="space-y-6">
+                            <div>
+                                <span class="text-slate-400 text-xs uppercase font-bold tracking-widest">Καθαρός Μηνιαίος Μισθός (Πληρωτέο)</span>
+                                <div class="text-6xl font-black text-blue-400 mt-2" id="rNet">€ 0.00</div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 hover:border-blue-500/50 transition">
+                                    <span class="text-[10px] text-slate-400 uppercase font-bold">ΕΦΚΑ Εργαζόμενου (13.87%)</span>
+                                    <div class="text-lg font-bold" id="rEfka">€ 0.00</div>
+                                </div>
+                                <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 hover:border-blue-500/50 transition">
+                                    <span class="text-[10px] text-slate-400 uppercase font-bold">ΦΜΥ / Φόρος Μισθωτών</span>
+                                    <div class="text-lg font-bold" id="rFmy">€ 0.00</div>
+                                </div>
+                                <div class="bg-slate-800/50 p-4 rounded-2xl border border-slate-700">
+                                    <span class="text-[10px] text-slate-400 uppercase font-bold italic">Δώρο Χριστουγέννων</span>
+                                    <div class="text-lg font-bold text-green-400" id="rXmas">€ 0.00</div>
+                                </div>
+                                <div class="bg-slate-800/50 p-4 rounded-2xl border border-slate-700">
+                                    <span class="text-[10px] text-slate-400 uppercase font-bold italic">Δώρο Πάσχα / Αδείας</span>
+                                    <div class="text-lg font-bold text-green-400" id="rEaster">€ 0.00</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAGE: BENEFITS -->
+            <section id="benefits" class="page-content hidden">
+                <h2 class="text-3xl font-black mb-8 text-slate-800 uppercase tracking-tight">Επιδόματα ΔΥΠΑ & ΟΠΕΚΑ 2026</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border-l-8 border-orange-500 shadow-sm hover:shadow-md transition">
+                        <span class="text-[10px] font-bold text-orange-600 uppercase">ΔΥΠΑ</span>
+                        <h4 class="font-black text-lg">Τακτικό Επίδομα Ανεργίας</h4>
+                        <p class="text-sm text-slate-500 mt-2">Βασικό Ποσό: 509,71€.<br>Προσαύξηση 10% για κάθε προστατευόμενο μέλος.</p>
+                        <div class="mt-4 flex gap-2">
+                            <span class="bg-orange-50 text-orange-600 px-2 py-1 rounded text-[10px] font-bold">ACTIVE</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border-l-8 border-blue-500 shadow-sm hover:shadow-md transition">
+                        <span class="text-[10px] font-bold text-blue-600 uppercase">ΟΠΕΚΑ</span>
+                        <h4 class="font-black text-lg">Επίδομα Παιδιού (A21)</h4>
+                        <p class="text-sm text-slate-500 mt-2">Προσεχής Πληρωμή: 31 Μαρτίου 2026.<br>Υπολογισμός βάσει εισοδηματικής κλίμακας.</p>
+                        <div class="mt-4 flex gap-2">
+                            <span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-[10px] font-bold">PAYMENT PENDING</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border-l-8 border-green-500 shadow-sm hover:shadow-md transition">
+                        <span class="text-[10px] font-bold text-green-600 uppercase">ΟΠΕΚΑ</span>
+                        <h4 class="font-black text-lg">Επίδομα Στέγασης</h4>
+                        <p class="text-sm text-slate-500 mt-2">70€ έως 210€ μηνιαίως αναλόγως τη σύνθεση νοικοκυριού.</p>
+                        <div class="mt-4 flex gap-2">
+                            <span class="bg-green-50 text-green-600 px-2 py-1 rounded text-[10px] font-bold">ELIGIBLE</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAGE: LAWS -->
+            <section id="laws" class="page-content hidden">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-3xl font-black text-slate-800 uppercase tracking-tight">Live Ενημέρωση: Εγκύκλιοι & ΦΕΚ</h2>
+                    <span class="bg-red-500 text-white px-4 py-1 rounded-full text-[10px] font-black animate-pulse flex items-center gap-2">
+                        <span class="w-2 h-2 bg-white rounded-full"></span> LIVE UPDATES
+                    </span>
+                </div>
+                <div class="space-y-4">
+                    <!-- Item 1 -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:bg-blue-50/30 transition cursor-pointer group">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-grow">
+                                <span class="text-[10px] font-bold text-blue-600 uppercase tracking-widest">ΑΑΔΕ / Φορολογία</span>
+                                <h4 class="text-xl font-bold text-slate-800 group-hover:text-blue-700 mt-1">Ε. 2045/2026: Διευκρινίσεις για την Ψηφιακή Κάρτα Εργασίας</h4>
+                                <p class="text-sm text-slate-500 mt-2">Οδηγίες για τον τρόπο δήλωσης υπερωριών και διακοπών στο ΠΣ ΕΡΓΑΝΗ ΙΙ.</p>
+                            </div>
+                            <span class="text-xs text-slate-400 font-mono bg-slate-100 px-2 py-1 rounded">10/03/2026</span>
+                        </div>
+                    </div>
+                    <!-- Item 2 -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:bg-blue-50/30 transition cursor-pointer group">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-grow">
+                                <span class="text-[10px] font-bold text-green-600 uppercase tracking-widest">ΕΦΚΑ / Ασφαλιστικά</span>
+                                <h4 class="text-xl font-bold text-slate-800 group-hover:text-blue-700 mt-1">Εγκύκλιος 12: Αναπροσαρμογή εισφορών αυτοαπασχολούμενων</h4>
+                                <p class="text-sm text-slate-500 mt-2">Νέες ασφαλιστικές κατηγορίες και ημερομηνίες καταβολής για το έτος 2026.</p>
+                            </div>
+                            <span class="text-xs text-slate-400 font-mono bg-slate-100 px-2 py-1 rounded">05/03/2026</span>
+                        </div>
+                    </div>
+                    <!-- Item 3 -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:bg-blue-50/30 transition cursor-pointer group">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-grow">
+                                <span class="text-[10px] font-bold text-purple-600 uppercase tracking-widest">Υπουργείο Εργασίας</span>
+                                <h4 class="text-xl font-bold text-slate-800 group-hover:text-blue-700 mt-1">Νόμος 5120/2026: Επέκταση άδειας μητρότητας</h4>
+                                <p class="text-sm text-slate-500 mt-2">Νέες διατάξεις για ελεύθερες επαγγελματίες και αγρότισσες σχετικά με την επιδότηση μητρότητας.</p>
+                            </div>
+                            <span class="text-xs text-slate-400 font-mono bg-slate-100 px-2 py-1 rounded">01/03/2026</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAGE: ESPA -->
+            <section id="espa" class="page-content hidden">
+                <h2 class="text-3xl font-black mb-8 text-slate-800 uppercase tracking-tight">Αναζήτηση Προγραμμάτων ΕΣΠΑ</h2>
+                <div class="p-20 text-center bg-white rounded-[3rem] border-4 border-dashed border-slate-200">
+                    <div class="bg-slate-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-search text-4xl text-slate-300"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-800">Σύστημα Ανάλυσης ΚΑΔ</h3>
+                    <p class="text-slate-500 max-w-sm mx-auto mt-4 leading-relaxed">
+                        Πληκτρολογήστε τον ΚΑΔ της επιχείρησής σας στο <b>AI Chatbot</b> (κάτω δεξιά) για να βρούμε αυτόματα τις ενεργές επιδοτήσεις για εσάς.
+                    </p>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- AI FLOATING SUPPORT CHATBOT -->
+    <div id="aiChat" class="fixed bottom-6 right-6 w-[420px] h-[650px] bg-white shadow-2xl rounded-[2.5rem] overflow-hidden border border-slate-200 hidden flex flex-col z-[100] transition-all">
+        <!-- Header -->
+        <div class="bg-slate-900 p-6 text-white flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="relative">
+                    <div class="bg-blue-600 w-12 h-12 rounded-full flex items-center justify-center shadow-lg shadow-blue-500/30">
+                        <i class="fas fa-robot text-xl"></i>
+                    </div>
+                    <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-slate-900 rounded-full"></span>
+                </div>
+                <div>
+                    <h4 class="font-black text-sm tracking-tight">Digital Accountant AI</h4>
+                    <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest italic">2026 Edition Pro</p>
+                </div>
+            </div>
+            <button onclick="toggleChat()" class="text-3xl font-light hover:text-red-400 transition">&times;</button>
+        </div>
+        
+        <!-- Chat History -->
+        <div id="chatHistory" class="flex-grow p-6 overflow-y-auto space-y-4 bg-slate-50 text-sm leading-relaxed">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 text-slate-700">
+                <p class="font-bold text-blue-600 mb-1">Σύστημα:</p>
+                Καλώς ορίσατε στο <b>AccounTech AI</b>. <br><br>
+                Είμαι ενημερωμένος με όλες τις εγκυκλίους έως <b>Μάρτιο 2026</b>. Πώς μπορώ να σας βοηθήσω σήμερα;
+            </div>
+        </div>
+        
+        <!-- Input Area -->
+        <div class="p-5 bg-white border-t border-slate-100">
+            <div class="flex gap-2 bg-slate-100 p-2 rounded-2xl border border-slate-200 focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-100 transition">
+                <input type="text" id="aiInput" class="bg-transparent flex-grow p-3 outline-none text-slate-800" placeholder="Ρωτήστε για μισθούς, ΕΣΠΑ, νόμους...">
+                <button onclick="askGemini()" class="bg-blue-600 text-white p-4 rounded-xl hover:bg-blue-700 transition shadow-lg flex items-center justify-center w-14 h-14">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN AI TOGGLE BUTTON -->
+    <button onclick="toggleChat()" class="fixed bottom-8 right-8 bg-slate-900 hover:bg-blue-600 text-white p-6 rounded-full shadow-2xl hover:scale-110 active:scale-95 transition z-50 flex items-center justify-center w-20 h-20 group">
+        <i class="fas fa-comment-dots text-3xl group-hover:rotate-12 transition"></i>
+        <span class="absolute -top-1 -right-1 w-6 h-6 bg-red-500 rounded-full border-4 border-slate-50 text-[10px] font-bold flex items-center justify-center">1</span>
+    </button>
+
+    <script>
+        // NAVIGATION LOGIC
+        function showPage(pageId, btn) {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
+            document.getElementById(pageId).classList.remove('hidden');
+            
+            document.querySelectorAll('.sidebar-item').forEach(b => {
+                b.classList.remove('active-link', 'opacity-100');
+                b.classList.add('opacity-70');
+            });
+            btn.classList.add('active-link', 'opacity-100');
+            btn.classList.remove('opacity-70');
+        }
+
+        // TOGGLE CHAT WINDOW
+        function toggleChat() {
+            const chat = document.getElementById('aiChat');
+            chat.classList.toggle('hidden');
+            if(!chat.classList.contains('hidden')) {
+                document.getElementById('aiInput').focus();
+            }
+        }
+
+        // PAYROLL CALCULATION (Exact parameters for Greece 2026)
+        function calculatePayroll() {
+            const grossInput = document.getElementById('gross').value;
+            const gross = parseFloat(grossInput) || 0;
+            const kids = parseInt(document.getElementById('kids').value);
+            
+            // Validation
+            if(gross < 830) {
+                alert("Σφάλμα: Ο κατώτατος μισθός για το 2026 έχει οριστεί στα 830€.");
+                return;
+            }
+
+            // 1. Εισφορές ΕΦΚΑ (Ποσοστό Εργαζομένου 13.87% - Πρόβλεψη 2026)
+            const efkaRate = 0.1387;
+            const efka = gross * efkaRate;
+            
+            // 2. Φορολογητέο Ποσό (Μεικτά - ΕΦΚΑ)
+            const taxableMonthly = gross - efka;
+            const annualTaxable = taxableMonthly * 14; // 12 μισθοί + Δώρα
+
+            // 3. Υπολογισμός Φόρου (Απλοποιημένη κλίμακα 2026)
+            let taxDiscount = 777; // Βασική έκπτωση φόρου
+            if(kids === 1) taxDiscount = 810;
+            if(kids === 2) taxDiscount = 900;
+            if(kids >= 3) taxDiscount = 1120;
+
+            let annualTax = (annualTaxable * 0.22) - taxDiscount; // 22% πρώτο κλιμάκιο
+            if(annualTax < 0) annualTax = 0;
+            
+            const monthlyFmy = annualTax / 14;
+
+            // 4. Καθαρό Ποσό
+            const net = taxableMonthly - monthlyFmy;
+
+            // 5. Δώρα & Επιδόματα (Προσαύξηση 1.04166)
+            const bonusFactor = 1.04166;
+            const xmass = gross * bonusFactor;
+            const easter = (gross / 2) * bonusFactor;
+            const vacation = (gross / 2) * bonusFactor;
+
+            // UI UPDATES με εφέ εμφάνισης
+            document.getElementById('rNet').innerText = "€ " + net.toLocaleString('el-GR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('rEfka').innerText = "€ " + efka.toLocaleString('el-GR', {minimumFractionDigits: 2});
+            document.getElementById('rFmy').innerText = "€ " + monthlyFmy.toLocaleString('el-GR', {minimumFractionDigits: 2});
+            document.getElementById('rXmas').innerText = "€ " + xmass.toLocaleString('el-GR', {minimumFractionDigits: 2});
+            document.getElementById('rEaster').innerText = "€ " + (easter + vacation).toLocaleString('el-GR', {minimumFractionDigits: 2});
+
+            const resCard = document.getElementById('resCard');
+            resCard.classList.replace('opacity-20', 'opacity-100');
+            resCard.classList.remove('translate-y-4');
+        }
+
+        // AI GEMINI INTEGRATION
+        const API_KEY = "AIzaSyB2zmTvKLXPCynqed1NcsGFHuDakmf9Pp4"; // Your provided Key
+
+        async function askGemini() {
+            const input = document.getElementById('aiInput');
+            const history = document.getElementById('chatHistory');
+            const text = input.value.trim();
+            
+            if(!text) return;
+
+            // 1. Add User Message
+            history.innerHTML += `
+                <div class="flex flex-col items-end animate-fade-in">
+                    <div class="bg-blue-600 text-white p-4 rounded-2xl rounded-tr-none shadow-md max-w-[85%]">
+                        <p class="font-bold text-[10px] uppercase opacity-70 mb-1 text-right">Εσείς</p>
+                        ${text}
+                    </div>
+                </div>
+            `;
+            input.value = "";
+            history.scrollTop = history.scrollHeight;
+
+            // 2. Loading Placeholder
+            const loadingId = "load-" + Date.now();
+            history.innerHTML += `
+                <div id="${loadingId}" class="flex flex-col items-start italic text-slate-400 text-xs p-2">
+                    <i class="fas fa-spinner animate-spin mr-2"></i> Ο AI Λογιστής αναλύει τα δεδομένα...
+                </div>
+            `;
+            history.scrollTop = history.scrollHeight;
+
+            // 3. API Call
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        contents: [{ 
+                            parts: [{ 
+                                text: `Είσαι ο AccounTech AI, ένας έμπειρος Έλληνας λογιστής το έτος 2026. 
+                                Απάντησε με επαγγελματισμό, εγκυρότητα και χρησιμοποιώντας τη νέα νομοθεσία του 2026. 
+                                Εστίασε σε θέματα ΕΦΚΑ, ΑΑΔΕ, ΕΣΠΑ και επιδομάτων. 
+                                Αν η ερώτηση είναι άσχετη με τη λογιστική, επανάφερε ευγενικά τη συζήτηση στο θέμα σου.
+                                Ερώτηση χρήστη: ${text}` 
+                            }] 
+                        }]
+                    })
+                });
+
+                const data = await response.json();
+                document.getElementById(loadingId).remove();
+                
+                if(data.candidates && data.candidates[0].content.parts[0].text) {
+                    const reply = data.candidates[0].content.parts[0].text.replace(/\n/g, '<br>');
+                    
+                    history.innerHTML += `
+                        <div class="flex flex-col items-start animate-fade-in">
+                            <div class="bg-white p-5 rounded-2xl rounded-tl-none shadow-sm border border-slate-200 text-slate-800 max-w-[90%] leading-relaxed">
+                                <p class="font-bold text-blue-600 text-[10px] uppercase mb-1">AccounTech AI</p>
+                                ${reply}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    throw new Error("Empty response");
+                }
+            } catch (error) {
+                if(document.getElementById(loadingId)) document.getElementById(loadingId).remove();
+                history.innerHTML += `<div class="text-red-500 text-[10px] text-center bg-red-50 p-2 rounded-lg">Σφάλμα σύνδεσης. Ελέγξτε το API Key ή τη σύνδεση σας.</div>`;
+            }
+            history.scrollTop = history.scrollHeight;
+        }
+
+        // Support Enter key for Chat
+        document.getElementById('aiInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                askGemini();
+            }
+        });
+    </script>
+</body>
+</html>
